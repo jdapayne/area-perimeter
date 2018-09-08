@@ -36,7 +36,7 @@ export function roundToTen (n) {
 }
 
 export function roundDP (x,n) {
-    return Math.round(Math.pow(x*10mn))/(Math.pow(10,n));
+    return Math.round(x*Math.pow(10,n))/Math.pow(10,n);
 }
 
 export function degToRad(x) {
@@ -112,24 +112,6 @@ export function firstUniqueIndex(array) {
     return i;
 }
 
-/* Canvas drawing */
-export function dashedLine(ctx,x1,y1,x2,y2) {
-    const length = Math.hypot(x2-x1,y2-y1);
-    const dashx = (y1-y2)/length; // unit vector perpendicular to line
-    const dashy = (x2-x1)/length;
-    const midx = (x1+x2)/2;
-    const midy = (y1+y2)/2;
-
-    // draw the base line
-    ctx.moveTo(x1,y1);
-    ctx.lineTo(x2,y2);
-
-    // draw the dash
-    ctx.moveTo(midx+5*dashx,midy+5*dashy);
-    ctx.lineTo(midx-5*dashx,midy-5*dashy);
-
-    ctx.moveTo(x2,y2);
-}
 
 /* Object property access by string */
 export function propByString (o, s, x) {

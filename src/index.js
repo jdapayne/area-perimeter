@@ -1,8 +1,12 @@
+import {propByString, randElem, randBetween} from "Utilities/Utilities"
+import Triangle from "Question/Triangle"
+import TriangleView from "QuestionView/TriangleView"
+
 window.addEventListener("DOMContentLoaded", function () {
         App.init();
 });
 
-export default function App {}
+export default function App () {}
 
 /* Initialisation: Sets up click handlers etc */
 App.init = function () {
@@ -163,16 +167,11 @@ App.chooseQRandom = function () {
 }
 
 App.chooseQ = function (shape, type, options) {
-    switch(type) {
-        case 'triangle':
-            return new Question(shape, type,options);
-        default:
-            throw "no_type";
-    }
+    return new Triangle(100,type);
 }
 
 App.makeView = function (question,rotation) {
-    let view = new QuestionView(question,rotation);
+    let view = new TriangleView(question,App.settings.canvas_width,App.settings.canvas_height,rotation,);
     return view;
 };
 
@@ -220,7 +219,8 @@ App.drawAll = function () {
 }
 
 App.generate = function (i) {
-    // Generates a question and represents it at the given index
+  // Generates a question and represents it at the given index
+  try {
     let question;
     if (App.settings.options_mode === 'basic') {
         let difffloat = App.settings.mindiff + i * (App.settings.maxdiff - App.settings.mindiff + 1)/App.settings.n_questions 
@@ -240,6 +240,13 @@ App.generate = function (i) {
     });
 
     App.draw(i);
+  } 
+  catch (e) {
+    if (e === "too_close") {
+        App.generate(i);
+    }
+    else throw e;
+  }
 };
 
 App.generateAll = function () {
@@ -312,13 +319,13 @@ App.defaults = {
 };
 
 App.settings = {
-    canvas_width_base: 250,
-    canvas_height_base: 250,
-    canvas_width: 250,
-    canvas_height: 250,
+    canvas_width_base: 300,
+    canvas_height_base: 300,
+    canvas_width: 300,
+    canvas_height: 300,
     zoom: 1,
-    shapes: new Set(['triangle']),
-    types: new Set(['area']),
+    shapes: new Set(["triangle"]),
+    types: new Set(["perimeter","area","rev-area","rev-perimeter"]),
     mindiff: 1,
     maxdiff: 5,
     n_questions: 8,

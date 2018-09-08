@@ -9,21 +9,35 @@ export default class Point {
         newx = Math.cos(angle)*this.x - Math.sin(angle)*this.y;
         newy = Math.sin(angle)*this.x + Math.cos(angle)*this.y;
         this.x = newx;
-        this.y = newy
+        this.y = newy;
+        return this;
     }
 
     scale (sf) {
         this.x = this.x * sf;
         this.y = this.y * sf;
+        return this;
     }
 
     translate(x,y) {
         this.x += x;
-        this.y += y
+        this.y += y;
+        return this;
     }
 
     clone() {
         return new Point(this.x,this.y);
+    }
+
+    equals(that) {
+        return (this.x === that.x && this.y === that.y)
+    }
+
+    moveToward(that,d) {
+        // moves [d] in the direction of [that::Point]
+        const uvec = Point.unitVector(this,that);
+        this.translate(uvec.x*d,uvec.y*d);
+        return this;
     }
 
     static fromPolar (r,theta) {
@@ -65,4 +79,29 @@ export default class Point {
         const maxy = points.reduce((y,p)=>Math.max(y,p.y),-Infinity);
         return new Point( (maxx + minx)/2 , (maxy+miny)/2);
     }
+
+  static unitVector(p1, p2) {
+    // returns a unit vector in the direction of p1 to p2
+    // in the form {x:..., y:...}
+    const vecx = p2.x - p1.x;
+    const vecy = p2.y - p1.y;
+    const length = Math.hypot(vecx,vecy);
+    return {x: vecx/length, y: vecy/length};
+  }
+
+  static distance(p1,p2) {
+        return Math.hypot(p1.x-p2.x,p1.y-p2.y);
+    }
+
+  static repel(p1,p2,trigger,distance) {
+    // When p1 and p2 are less than [trigger] apart, they are
+    // moved so that they are [distance] apart
+    const d = Math.hypot(p1.x-p2.x,p1.y-p2.y);
+    if (d >= trigger) return false;
+
+    const r = (distance-d)/2; // distance they need moving
+    p1.moveToward(p2,-r);
+    p2.moveToward(p1,-r);
+    return true;
+  }
 }

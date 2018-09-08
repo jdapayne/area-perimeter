@@ -1,0 +1,24 @@
+{
+  "name": "area-perimeter",
+  "version": "1.0.0",
+  "description": "Area and perimter question generator",
+  "main": "index.js",
+  "dependencies": {},
+  "devDependencies": {
+    "webpack": "^4.17.2",
+    "webpack-command": "^0.4.1"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jdapayne/area-perimeter.git"
+  },
+  "author": "Jonathan Payne",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/jdapayne/area-perimeter/issues"
+  },
+  "homepage": "https://github.com/jdapayne/area-perimeter#readme"
+}
