@@ -117,7 +117,7 @@ export default class TriangleView extends QuestionView {
         const d = Point.distance(l1.pos,l2.pos);
         //console.log(`d('${l1.text}','${l2.text}') = ${d}`);
         if (d < 20) {
-          console.log("too close");
+          //console.log("too close");
           this.success=false;
         }
       }

@@ -1,6 +1,6 @@
 import QuestionView from "QuestionView/QuestionView";
 import Point from "Utilities/Point";
-import {arrowLine, drawRightAngle} from "Utilities/point-drawing";
+import {drawRightAngle} from "Utilities/point-drawing";
 
 export default class RectangleView extends QuestionView {
   constructor (question, width, height, rotation) {

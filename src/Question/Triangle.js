@@ -55,7 +55,7 @@ export default class Triangle {
       if (Math.random()<0.5) this.h.missing=true;
       else this.b.missing=true;
       break;
-    case "rev-perimeter":
+    case "rev-perimeter":{
       this.perimeter.show=true;
       this.perimeter.missing=false;
       let sides = [this.b,this.h];
@@ -63,6 +63,7 @@ export default class Triangle {
       else sides.push(this.s1);
       randElem(sides).missing=true;
       break;
+    }
     case "pythag-area":
       this.area.show=true;
       this.area.missing=true;

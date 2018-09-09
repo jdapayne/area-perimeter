@@ -12,7 +12,7 @@ export default class Rectangle {
       sides = {
         b: randBetween(1,x),
         h: randBetween(1,x)
-      }
+      };
     }
 
     this.b = {val: sides.b, show: true, missing: false};
