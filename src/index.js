@@ -1,12 +1,14 @@
-import {propByString, randElem, randBetween} from "Utilities/Utilities"
-import Triangle from "Question/Triangle"
-import TriangleView from "QuestionView/TriangleView"
+import {propByString, randElem} from "Utilities/Utilities";
+import Triangle from "Question/Triangle";
+import TriangleView from "QuestionView/TriangleView";
 
 window.addEventListener("DOMContentLoaded", function () {
-        App.init();
+    App.init();
 });
 
-export default function App () {}
+export default function App () {
+    return;
+}
 
 /* Initialisation: Sets up click handlers etc */
 App.init = function () {
@@ -44,23 +46,23 @@ App.init = function () {
 
     document.getElementById("zoom").addEventListener("click", function(e) {
         const elem = e.target;
-        if (elem.id === 'zoomin') {
+        if (elem.id === "zoomin") {
             App.zoom(1);
-        } else if (elem.id == 'zoomout') {
-            App.zoom(-1); 
+        } else if (elem.id == "zoomout") {
+            App.zoom(-1);
         }
     });
 
     document.body.addEventListener("click", function (event) {
         const e = event.target;
-        if (e.dataset.modal) {App.modalOpen(e.dataset.modal); event.preventDefault()}
+        if (e.dataset.modal) {App.modalOpen(e.dataset.modal); event.preventDefault();}
     });
 
     document.getElementById("modal-overlay").addEventListener("click", function (event) {
         if (event.target.closest(".modal")) return;
-        else App.modalClose()
+        App.modalClose();
     });
-}
+};
 /* * * * * * * * * * * * * * * * * * * * * * * */
 
 /* UI control */
@@ -74,17 +76,20 @@ App.toggleOptions = function (e) {
         showoptions.innerHTML = "Hide options";
     }
 
-    if (e) {e.preventDefault()}
-}
+    if (e) {e.preventDefault();}
+};
 
-App.toggleAnswer = function (i,e) {
+App.toggleAnswer = function (i) {
     let answered = App.questions[i].viewobject.toggleAnswer();
     App.draw(i);
     let container = App.questions[i].container;
     container.classList.toggle("answer");
     let toggle = container.querySelector(".answer-toggle");
-    if (answered) toggle.innerHTML = "Hide answer";
-    else toggle.innerHTML = "Show answer";
+    if (answered) {
+        toggle.innerHTML = "Hide answer";
+    } else {
+        toggle.innerHTML = "Show answer";
+    }
 };
 
 App.showAnswer = function (i) {
@@ -95,7 +100,7 @@ App.showAnswer = function (i) {
     container.querySelector(".answer-toggle").innerHTML = "Hide answer";
 };
 
-App.hideAnswer = function (i,e) {
+App.hideAnswer = function (i) {
     App.questions[i].viewobject.hideAnswer();
     App.draw(i);
     let container = App.questions[i].container;
@@ -104,74 +109,76 @@ App.hideAnswer = function (i,e) {
 };
 
 App.hideAllAnswers = function () {
-    App.questions.forEach( function(q,i) { App.hideAnswer(i) });
+    App.questions.forEach( function(q,i) { App.hideAnswer(i); });
     document.getElementById("show-answers").innerHTML = "Show answers";
     App.answered = false;
-}
+};
 
 App.showAllAnswers = function () {
-    App.questions.forEach( function(q,i) { App.showAnswer(i) });
+    App.questions.forEach( function(q,i) { App.showAnswer(i); });
     document.getElementById("show-answers").innerHTML = "Hide answers";
     App.answered = true;
-}
+};
 
 App.toggleAllAnswers = function (e) {
     if (App.answered) App.hideAllAnswers();
     else App.showAllAnswers();
-    if (e) {e.preventDefault()}
-}
+    if (e) {e.preventDefault();}
+};
 
 App.answered = false;
 /* * * * * * * * * * * * * * * * * * * * * * * */
 
 /* * * Question selection/object creation * * */
-/*
+
 App.chooseQDifficulty = function (difficulty) {
     // choose question at random - given type options, with given difficulty.
-    // Aim - avoid and DOM interaction with these.
-    const type = App.randomType();
-    const anglesum = type === 'aosl' ? 180 :
-                     type === 'aaap' ? 360 :
+    difficulty = Math.floor((difficulty-1)/2)*2+1;  //just odds for now
+    const shape = randElem(App.settings.shapes);
+    const type = randElem(App.settings.simple_types); //area or perimete
     switch(difficulty) {
-        case 1:
-            return App.chooseQ(type,"simple",{n: 2});
-        case 2:
-            return App.chooseQ(type,"simple",{n: 3});
-        case 3:
-            return App.chooseQ(type,"repeated", {n:3});
-        case 4:
-            return App.chooseQ(type,"algebra", {types: ['mult'], constants: false, ensure_x: false, min_n:3, max_n:4});
-        case 5:
-            return App.chooseQ(type,"algebra", {types: ['add','mult'], constants: ['mult'], ensure_x: true, min_n: 2, max_n: 3});
-        case 6:
-            return App.chooseQ(type,"algebra", {types: ['mixed'], min_n: 2, max_n: 3});
-        case 7:
-            return App.chooseQ(type,"worded", {types: [Math.random()<0.5 ? 'add':'multiply'], n:2});
-        case 8:
-            return App.chooseQ(type,"worded", {types: ['add','multiply'], n:3});
-        case 9:
-            return App.chooseQ(type,"worded", {types: ['multiply','ratio'], n:3});
-        case 10:
-            return App.chooseQ(type,"worded", {types: ['add','multiply','ratio','percent'], n:3});
-        default:
-            return App.chooseQ(type,"simple",{n: 2});
+    case 1:
+        return App.chooseQ(shape,type,{no_distractors: true});
+    case 2:
+        throw "shouldnt happen";
+    case 3:
+        return App.chooseQ(shape,type);
+    case 4:
+        throw "shouldnt happen";
+    case 5:
+        return App.chooseQ(shape,"rev-"+type);
+    case 6:
+        throw "shouldnt happen";
+    case 7:
+        return App.chooseQ(shape,"pythag-"+type);
+    case 8:
+        throw "shouldnt happen";
+    case 9:
+        if (App.settings.simple_types.has("area")) {
+            return App.chooseQ(shape,"iso-pythag-area");
+        } else {
+            return App.chooseQ(shape,"pythag-perimeter");
+        }
+    case 10:
+        throw "shouldnt happen";
+    default:
+        throw "shouldnt happen";
     }
-}
-*/
+};
 
 App.chooseQRandom = function () {
     // choose based on options for type and subtupes available
     const shape = randElem(App.settings.shapes);
     const type = randElem(App.settings.types);
     return App.chooseQ(shape,type,App.settings.options);
-}
+};
 
 App.chooseQ = function (shape, type, options) {
-    return new Triangle(100,type);
-}
+    return new Triangle(100,type,options);
+};
 
 App.makeView = function (question,rotation) {
-    let view = new TriangleView(question,App.settings.canvas_width,App.settings.canvas_height,rotation,);
+    let view = new TriangleView(question,App.settings.canvas_width,App.settings.canvas_height,rotation);
     return view;
 };
 
@@ -196,8 +203,8 @@ App.reDraw = function (x) {
     // re-generates view for ith question and draws it
     // Mainly used for when widh/height changes
 
-    const q = typeof(x) === 'number' ? App.questions[x] : x;
-    
+    const q = typeof(x) === "number" ? App.questions[x] : x;
+
     const canvas = q.container.querySelector("canvas");
     canvas.width = App.settings.canvas_width;
     canvas.height = App.settings.canvas_height;
@@ -208,7 +215,7 @@ App.reDraw = function (x) {
 
     q.viewobject = newview;
     newview.drawIn(canvas);
-}
+};
 
 App.drawAll = function () {
     App.questions.forEach( function (q) {
@@ -216,37 +223,37 @@ App.drawAll = function () {
         const canvas = q.container.querySelector("canvas");
         view.drawIn(canvas);
     });
-}
+};
 
 App.generate = function (i) {
-  // Generates a question and represents it at the given index
-  try {
-    let question;
-    if (App.settings.options_mode === 'basic') {
-        let difffloat = App.settings.mindiff + i * (App.settings.maxdiff - App.settings.mindiff + 1)/App.settings.n_questions 
-        let diff = Math.floor(difffloat); 
-        console.log("difficulty for " + i + " : " + difffloat + " -> " + diff);
-        question = App.chooseQDifficulty(diff);
-    } else {
-        question = App.chooseQRandom() 
-    }
+    // Generates a question and represents it at the given index
+    try {
+        let question;
+        if (App.settings.options_mode === "basic") {
+            let difffloat = App.settings.mindiff + i * (App.settings.maxdiff - App.settings.mindiff + 1)/App.settings.n_questions;
+            let diff = Math.floor(difffloat);
+            //console.log("difficulty for " + i + " : " + difffloat + " -> " + diff);
+            question = App.chooseQDifficulty(diff);
+        } else {
+            question = App.chooseQRandom();
+        }
 
-    let view = App.makeView(question);
-    
-    App.questions[i] = Object.assign({},App.questions[i], {
-        viewobject: view,
-        type: question.type,
-        subtype: question.subtype
-    });
+        let view = App.makeView(question);
 
-    App.draw(i);
-  } 
-  catch (e) {
-    if (e === "too_close") {
-        App.generate(i);
+        App.questions[i] = Object.assign({},App.questions[i], {
+            viewobject: view,
+            type: question.type,
+            subtype: question.subtype
+        });
+
+        App.draw(i);
     }
-    else throw e;
-  }
+    catch (e) {
+        if (e.message === "too_close") {
+            App.generate(i);
+        }
+        else throw e;
+    }
 };
 
 App.generateAll = function () {
@@ -295,9 +302,9 @@ App.zoom = function (sign) {
     App.settings.canvas_height = App.settings.canvas_height_base * App.settings.zoom;
 
     App.questions.forEach( function (q) {
-        App.reDraw(q)
+        App.reDraw(q);
     });
-}
+};
 
 /* * * Data on generated questions * * *
  *******************************************************************************************************
@@ -312,12 +319,6 @@ App.zoom = function (sign) {
 /********************************************************************************************************/
 
 /* * * Settings related * * */
-App.defaults = {
-    canvas_width: 250,
-    canvas_height: 250,
-    radius: 100
-};
-
 App.settings = {
     canvas_width_base: 300,
     canvas_height_base: 300,
@@ -326,13 +327,15 @@ App.settings = {
     zoom: 1,
     shapes: new Set(["triangle"]),
     types: new Set(["perimeter","area","rev-area","rev-perimeter"]),
+    simple_types: new Set(["perimeter","area"]),
     mindiff: 1,
     maxdiff: 5,
     n_questions: 8,
+    options_mode: "basic",
     options: {
         mix_units: true
     }
-}
+};
 
 App.settings.fromPage = function() {
     const formOptions = document.getElementsByClassName("option");
@@ -343,19 +346,19 @@ App.settings.fromPage = function() {
         //TODO: Make it work with radio buttons
         if (setting.endsWith("[]")) { //modify a set from checkboxes
             setting = setting.slice(0,-2);
-            if (!propByString(this,setting)) propByString(this,setting, new Set()); 
+            if (!propByString(this,setting)) propByString(this,setting, new Set());
             // TODO: convert array to Set if needed
             if (settingElem.checked) propByString(this,setting).add(value);
             else propByString(this,setting).delete(value);
         } else if (settingElem.type === "checkbox") {
-            propByString(this,setting,settingElem.checked?true:false)
+            propByString(this,setting,settingElem.checked?true:false);
         } else if (settingElem.checked || (settingElem.type !== "radio" && settingElem.type !== "checkbox")) {
             propByString(this,setting,value);
         }
     }
-console.log("settings updated:");
-console.log(this);
-}
+//console.log("settings updated:");
+//console.log(this);
+};
 
 App.settings.toPage = function() {
     const formOptions = document.getElementsByClassName("option");
@@ -376,7 +379,7 @@ App.settings.toPage = function() {
             settingElem.value = propByString(this,setting);
         }
     }
-}
+};
 
 App.modalOpen = function (id) {
     const modal = document.getElementById(id) || document.getElementById("default-modal");
@@ -385,7 +388,7 @@ App.modalOpen = function (id) {
         overlay.appendChild(modal);
         overlay.classList.remove("hidden");
     }
-}
+};
 
 App.modalClose = function () {
     const overlay = document.getElementById("modal-overlay");
@@ -394,12 +397,12 @@ App.modalClose = function () {
         document.body.appendChild(children[0]);
     }
     overlay.classList.add("hidden");
-}
+};
 
 App.toggleHidden = function (idlist) {
     for (let i = 0; i<idlist.length; i++) {
         document.getElementById(idlist[i]).classList.toggle("hidden");
     }
-}
+};
 
 /* * * * * * * * * * * * * * * * * * * * */

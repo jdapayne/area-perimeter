@@ -112,7 +112,6 @@ export function firstUniqueIndex(array) {
     return i;
 }
 
-
 /* Object property access by string */
 export function propByString (o, s, x) {
     /* E.g. byString(myObj,"foo.bar") -> myObj.foo.bar
@@ -131,4 +130,9 @@ export function propByString (o, s, x) {
     }
     if (x === undefined) return o[a[n]];
     else o[a[n]] = x;
+}
+
+/* Logic */
+export function mIf (p,q) { //material conditional
+  return (!p||q)
 }

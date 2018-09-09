@@ -21,6 +21,7 @@ export default class QuestionView {
         if (this.answered) return; //nothing to do
         this.labels.forEach( l => {
             l.text = l.texta;
+            l.style = l.stylea;
         });
         return this.answered = true;
     }
@@ -29,6 +30,7 @@ export default class QuestionView {
         if (!this.answered) return; //nothing to do
         this.labels.forEach( l => {
             l.text = l.textq;
+            l.style = l.styleq;
         });
         return this.answered = false;
     }

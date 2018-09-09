@@ -5,7 +5,9 @@
   "main": "index.js",
   "dependencies": {},
   "devDependencies": {
+    "eslint": "^5.5.0",
     "webpack": "^4.17.2",
+    "webpack-clear-console": "^1.0.3",
     "webpack-command": "^0.4.1"
   },
   "scripts": {
