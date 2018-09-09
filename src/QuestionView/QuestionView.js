@@ -5,7 +5,7 @@ export default class QuestionView {
         this.question = question;
         this.answered = false;
         this.rotation = rotation;
-        this.unknown = "x°";
+      this.success = true;
     }
 
 /* * * Abstract methods   * * */

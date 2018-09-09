@@ -110,6 +110,7 @@ export default class TriangleView extends QuestionView {
     });
     
     // stop them from clashing - hmm, not sure
+    this.success=true;
     for (let i = 0, n=this.labels.length; i < n; i++) {
       for (let j = 0; j < i; j++) {
         const l1=this.labels[i], l2=this.labels[j];
@@ -117,7 +118,7 @@ export default class TriangleView extends QuestionView {
         //console.log(`d('${l1.text}','${l2.text}') = ${d}`);
         if (d < 20) {
           console.log("too close");
-          throw new Error("too_close");
+          this.success=false;
         }
       }
     }

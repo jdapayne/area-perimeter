@@ -11,6 +11,7 @@ export default class Triangle {
 
   constructor (x,type,options) {
     if (!options) options = {};
+    this.shape="triangle";
 
     let sides;
     if ( x.b && x.s1 && x.s2 ) sides = x;
@@ -57,7 +58,10 @@ export default class Triangle {
     case "rev-perimeter":
       this.perimeter.show=true;
       this.perimeter.missing=false;
-      randElem([this.b,this.s1,this.s2]).missing=true;
+      let sides = [this.b,this.h];
+      if (this.s1===this.h) sides.push(this.s2);
+      else sides.push(this.s1);
+      randElem(sides).missing=true;
       break;
     case "pythag-area":
       this.area.show=true;
@@ -67,9 +71,18 @@ export default class Triangle {
     case "pythag-perimeter": {
       this.perimeter.show=true;
       this.perimeter.missing=true;
-      let sides = [this.b,this.h];
-      if (this.s1===this.h) sides.push(this.s2);
-      else sides.push(this.s1);
+      let sides = [this.b];
+      if (this.s1===this.h) {
+        sides.push(this.s2);
+        sides.push(this.h);
+      }
+      else if (this.s2===this.h) {
+        sides.push(this.s1);
+        sides.push(this.h);
+      } else {
+        sides.push(this.s1);
+        sides.push(this.s2);
+      }
       randElem(sides).show=false;
       break;
     }

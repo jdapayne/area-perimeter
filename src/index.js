@@ -1,6 +1,8 @@
 import {propByString, randElem} from "Utilities/Utilities";
 import Triangle from "Question/Triangle";
 import TriangleView from "QuestionView/TriangleView";
+import Rectangle from "Question/Rectangle";
+import RectangleView from "QuestionView/RectangleView";
 
 window.addEventListener("DOMContentLoaded", function () {
     App.init();
@@ -174,12 +176,38 @@ App.chooseQRandom = function () {
 };
 
 App.chooseQ = function (shape, type, options) {
-    return new Triangle(100,type,options);
+  switch(shape) {
+    case "triangle":
+      return new Triangle(100,type,options);
+    default:
+    case "rectangle":
+      return new Rectangle(50,type,options);
+  }
 };
 
 App.makeView = function (question,rotation) {
-    let view = new TriangleView(question,App.settings.canvas_width,App.settings.canvas_height,rotation);
-    return view;
+  let view;
+  switch (question.shape) {
+    case "triangle":
+      view = new TriangleView(
+        question,
+        App.settings.canvas_width,
+        App.settings.canvas_height,
+        rotation
+      );
+      break;
+    case "rectangle":
+      view = new RectangleView(
+        question,
+        App.settings.canvas_width,
+        App.settings.canvas_height,
+        rotation
+      );
+      break;
+    default:
+      throw new Error("question has no type");
+  }
+  return view;
 };
 
 /* * * Question drawing control * * */
@@ -226,34 +254,31 @@ App.drawAll = function () {
 };
 
 App.generate = function (i) {
-    // Generates a question and represents it at the given index
-    try {
-        let question;
-        if (App.settings.options_mode === "basic") {
-            let difffloat = App.settings.mindiff + i * (App.settings.maxdiff - App.settings.mindiff + 1)/App.settings.n_questions;
-            let diff = Math.floor(difffloat);
-            //console.log("difficulty for " + i + " : " + difffloat + " -> " + diff);
-            question = App.chooseQDifficulty(diff);
-        } else {
-            question = App.chooseQRandom();
-        }
+  // Generates a question and represents it at the given index
+  let question, view;
 
-        let view = App.makeView(question);
+  while (!view || !view.success) { //regenerate if needed
 
-        App.questions[i] = Object.assign({},App.questions[i], {
-            viewobject: view,
-            type: question.type,
-            subtype: question.subtype
-        });
-
-        App.draw(i);
+    if (App.settings.options_mode === "basic") {
+        let difffloat = App.settings.mindiff + i * (App.settings.maxdiff - App.settings.mindiff + 1)/App.settings.n_questions;
+        let diff = Math.floor(difffloat);
+        //console.log("difficulty for " + i + " : " + difffloat + " -> " + diff);
+        question = App.chooseQDifficulty(diff);
+    } else {
+        question = App.chooseQRandom();
     }
-    catch (e) {
-        if (e.message === "too_close") {
-            App.generate(i);
-        }
-        else throw e;
-    }
+
+    view = App.makeView(question);
+
+  }
+
+  App.questions[i] = Object.assign({},App.questions[i], {
+      viewobject: view,
+      type: question.type,
+      subtype: question.subtype
+  });
+
+  App.draw(i);
 };
 
 App.generateAll = function () {
