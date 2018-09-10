@@ -3,6 +3,8 @@ import Triangle from "Question/Triangle";
 import TriangleView from "QuestionView/TriangleView";
 import Rectangle from "Question/Rectangle";
 import RectangleView from "QuestionView/RectangleView";
+import Parallelogram from "Question/Parallelogram";
+import ParallelogramView from "QuestionView/ParallelogramView";
 
 window.addEventListener("DOMContentLoaded", function () {
   App.init();
@@ -179,6 +181,8 @@ App.chooseQ = function (shape, type, options) {
   switch(shape) {
   case "triangle":
     return new Triangle(100,type,options);
+  case "parallelogram":
+    return new Parallelogram(50,type,options);
   default:
   case "rectangle":
     return new Rectangle(50,type,options);
@@ -188,24 +192,32 @@ App.chooseQ = function (shape, type, options) {
 App.makeView = function (question,rotation) {
   let view;
   switch (question.shape) {
-  case "triangle":
-    view = new TriangleView(
-      question,
-      App.settings.canvas_width,
-      App.settings.canvas_height,
-      rotation
-    );
-    break;
-  case "rectangle":
-    view = new RectangleView(
-      question,
-      App.settings.canvas_width,
-      App.settings.canvas_height,
-      rotation
-    );
-    break;
-  default:
-    throw new Error("question has no type");
+    case "triangle":
+      view = new TriangleView(
+        question,
+        App.settings.canvas_width,
+        App.settings.canvas_height,
+        rotation
+      );
+      break;
+    case "rectangle":
+      view = new RectangleView(
+        question,
+        App.settings.canvas_width,
+        App.settings.canvas_height,
+        rotation
+      );
+      break;
+    case "parallelogram":
+      view = new ParallelogramView(
+        question,
+        App.settings.canvas_width,
+        App.settings.canvas_height,
+        rotation
+      );
+      break;
+    default:
+      throw new Error("question has no type");
   }
   return view;
 };

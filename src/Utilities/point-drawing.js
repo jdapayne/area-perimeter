@@ -61,4 +61,29 @@ export function drawRightAngle (ctx, A, O, C, size) {
   ctx.lineTo(ctl3.x,ctl3.y);
 }
 
+export function parallelSign (ctx, A, B, size, number, gap) {
+  if (!size) size = 10;
+  if (!number) number = 1;
+  if (!gap) gap = size;
 
+  let unit = Point.unitVector(A,B);
+  unit.x *= size;
+  unit.y *= size;
+  const normal = {x: -unit.y, y: unit.x};
+
+  const M = Point.mean([A,B]);
+
+  for (let i = 0; i<number; i++) {
+    const ctl2 = M.clone().moveToward(B,i*gap);
+    const ctl1 = ctl2.clone()
+      .translate(-unit.x,-unit.y)
+      .translate(normal.x,normal.y);
+    const ctl3 = ctl2.clone()
+      .translate(-unit.x,-unit.y)
+      .translate(-normal.x,-normal.y);
+
+    ctx.moveTo(ctl1.x,ctl1.y);
+    ctx.lineTo(ctl2.x,ctl2.y);
+    ctx.lineTo(ctl3.x,ctl3.y);
+  }
+}
