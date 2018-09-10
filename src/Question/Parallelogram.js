@@ -12,8 +12,8 @@ export default class Parallelogram {
       const b = randBetween(1,x);
       const h = randBetween(1,x);
       const s = randBetween(h,x);
-      sides = {b: b,h: h,s: s}
-    };
+      sides = {b: b,h: h,s: s};
+    }
   
 
     this.b = {val: sides.b, show: true, missing: false};

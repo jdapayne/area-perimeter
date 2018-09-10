@@ -192,32 +192,32 @@ App.chooseQ = function (shape, type, options) {
 App.makeView = function (question,rotation) {
   let view;
   switch (question.shape) {
-    case "triangle":
-      view = new TriangleView(
-        question,
-        App.settings.canvas_width,
-        App.settings.canvas_height,
-        rotation
-      );
-      break;
-    case "rectangle":
-      view = new RectangleView(
-        question,
-        App.settings.canvas_width,
-        App.settings.canvas_height,
-        rotation
-      );
-      break;
-    case "parallelogram":
-      view = new ParallelogramView(
-        question,
-        App.settings.canvas_width,
-        App.settings.canvas_height,
-        rotation
-      );
-      break;
-    default:
-      throw new Error("question has no type");
+  case "triangle":
+    view = new TriangleView(
+      question,
+      App.settings.canvas_width,
+      App.settings.canvas_height,
+      rotation
+    );
+    break;
+  case "rectangle":
+    view = new RectangleView(
+      question,
+      App.settings.canvas_width,
+      App.settings.canvas_height,
+      rotation
+    );
+    break;
+  case "parallelogram":
+    view = new ParallelogramView(
+      question,
+      App.settings.canvas_width,
+      App.settings.canvas_height,
+      rotation
+    );
+    break;
+  default:
+    throw new Error("question has no type");
   }
   return view;
 };
