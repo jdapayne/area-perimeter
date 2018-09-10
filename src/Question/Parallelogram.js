@@ -59,7 +59,7 @@ export default class Parallelogram {
     default:
       this.perimeter.show=true;
       this.perimeter.missing=false;
-      randElem([this.b,this.h]).missing = true;
+      randElem([this.b,this.s]).missing = true;
       break;
     }
   }
