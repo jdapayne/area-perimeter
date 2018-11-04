@@ -1,4 +1,4 @@
-import {randElem, roundDP} from "Utilities/Utilities";
+import {randElem} from "Utilities/Utilities";
 import triangle_data from "./triangle_data.json";
 
 export default class Triangle {
@@ -15,7 +15,7 @@ export default class Triangle {
       dp: 0, // decimal places
       right_angle: false,
       isosceles: false
-    }
+    };
     const settings = Object.assign({},defaults,options);
 
     this.shape="triangle";

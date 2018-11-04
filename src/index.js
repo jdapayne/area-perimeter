@@ -407,8 +407,8 @@ App.settings.fromPage = function() {
       propByString(this,setting,value);
     }
   }
-console.log("settings updated:");
-console.log(this);
+  //console.log("settings updated:");
+  //console.log(this);
 };
 
 App.settings.toPage = function() {

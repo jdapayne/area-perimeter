@@ -1,5 +1,4 @@
-import {randElem, randBetween, roundDP, randPythagTriple, randPythagTripleWithLeg} from "Utilities/Utilities";
-import triangle_data from "./triangle_data.json";
+import {randElem, randBetween, randPythagTriple, randPythagTripleWithLeg} from "Utilities/Utilities";
 
 export default class Trapezium {
   /* Polymorphic constructor:
@@ -15,7 +14,7 @@ export default class Trapezium {
       dp: 0, // decimal places
       right_angle: false,
       isosceles: false
-    }
+    };
     const settings = Object.assign({},defaults,options);
     const max_side = Number.isInteger(x) ? x : 500;
 
@@ -44,7 +43,7 @@ export default class Trapezium {
     a = randBetween(Math.floor(Math.min(s1,s2)*0.75),max_side-b1-b2);
     b = b1 + b2 + a;
 
-    this.a = {val: a, show: true, missing: false}
+    this.a = {val: a, show: true, missing: false};
     this.b = {val: b, show: true, missing: false};
     this.h = {val: h, show: true, missing: false};
     this.s1 = {val: s1, show: true, missing: false};

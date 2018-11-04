@@ -95,9 +95,8 @@ export function randPythagTripleWithLeg(a,max) {
       triple = f1(a,max);
     } catch(err) {
       triple = f2(a,max);
-    } finally {
-      return triple;
-    }
+    } 
+    return triple;
   }
 }
 
@@ -108,9 +107,9 @@ function randPythag2mn(a,max) {
   const maxm = Math.sqrt(a/2);                              
   for (let m=1; m<maxm; m++) {
     if ( (a/2)%m===0 && m*m+(a*a)/(4*m*m)<=max ) {
-      factors.push(m)
+      factors.push(m);
     }
-  };
+  }
   if (factors.length===0) throw "2mn no options";
 
   let m = randElem(factors);
@@ -122,8 +121,8 @@ function randPythagnn_mm(a,max) {
   // assumes a = n^2-m^2
   // m=sqrt(a+n^2)
   // cycle through 1≤m≤sqrt((max-a)/2)
-  let possibles = []
-  const maxm = Math.sqrt((max-a)/2)
+  let possibles = [];
+  const maxm = Math.sqrt((max-a)/2);
   for (let m=1; m<=maxm; m++) {
     let n = Math.sqrt(a+m*m);
     if (n===Math.floor(n)) possibles.push([n,m]);
