@@ -1,6 +1,7 @@
 import QuestionView from "QuestionView/QuestionView";
 import Point from "Utilities/Point";
 import {arrowLine, drawRightAngle} from "Utilities/point-drawing";
+import {scaledStr} from "Utilities/Utilities";
 
 export default class TriangleView extends QuestionView {
   constructor (triangle, width, height, rotation) {
@@ -40,6 +41,7 @@ export default class TriangleView extends QuestionView {
     ];
 
     // order of putting in height matters for offset
+    // This breaks if we have rounding errors
     if (this.ht.equals(this.B)) {
       sides.push([this.ht,this.C,triangle.h]);
     } else {
@@ -48,6 +50,7 @@ export default class TriangleView extends QuestionView {
 
     for (let i = 0; i < 4; i++) { //sides
       if (!sides[i][2].show) continue;
+      const dp = this.question.dp;
       const offset = 20;
       let pos = Point.mean([sides[i][0],sides[i][1]]);
       const unitvec = Point.unitVector(sides[i][0], sides[i][1]);
@@ -55,7 +58,7 @@ export default class TriangleView extends QuestionView {
       if ( i < 3 || triangle.isRightAngled() )
         pos.translate(-unitvec.y*offset, unitvec.x*offset); 
 
-      const texta = sides[i][2].val.toString() + "cm";
+      const texta = scaledStr(sides[i][2].val,dp) + "cm";
       const textq = sides[i][2].missing? "?" : texta;
       const styleq = "normal";
       const stylea = sides[i][2].missing? "answer" : "normal";
@@ -72,7 +75,7 @@ export default class TriangleView extends QuestionView {
     //area and perimeter
     let n_info = 0;
     if (triangle.area.show) {
-      const texta = triangle.area.val.toString() + "cm²";
+      const texta = scaledStr(triangle.area.val,this.question.dp*2) + "cm²";
       const textq = triangle.area.missing? "?" : texta;
       const styleq = "extra-info";
       const stylea = triangle.area.missing? "extra-answer" : "extra-info";
@@ -88,7 +91,7 @@ export default class TriangleView extends QuestionView {
       n_info++;
     }
     if (triangle.perimeter.show) {
-      const texta = triangle.perimeter.val.toString() + "cm";
+      const texta = scaledStr(triangle.perimeter.val,this.question.dp) + "cm";
       const textq = triangle.perimeter.missing? "?" : texta;
       const styleq = "extra-info";
       const stylea = triangle.perimeter.missing? "extra-answer" : "extra-info";

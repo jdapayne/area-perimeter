@@ -5,6 +5,8 @@ import Rectangle from "Question/Rectangle";
 import RectangleView from "QuestionView/RectangleView";
 import Parallelogram from "Question/Parallelogram";
 import ParallelogramView from "QuestionView/ParallelogramView";
+import Trapezium from "Question/Trapezium";
+import TrapeziumView from "QuestionView/TrapeziumView";
 
 window.addEventListener("DOMContentLoaded", function () {
   App.init();
@@ -137,34 +139,33 @@ App.answered = false;
 
 App.chooseQDifficulty = function (difficulty) {
   // choose question at random - given type options, with given difficulty.
-  difficulty = Math.floor((difficulty-1)/2)*2+1;  //just odds for now
+  //difficulty = Math.floor((difficulty-1)/2)*2+1;  //just odds for now
   const shape = randElem(App.settings.shapes);
   const type = randElem(App.settings.simple_types); //area or perimete
   switch(difficulty) {
   case 1:
     return App.chooseQ(shape,type,{no_distractors: true});
   case 2:
-    throw "shouldnt happen";
+    return App.chooseQ(shape,type,{no_distractors: true, dp:1});
   case 3:
     return App.chooseQ(shape,type);
   case 4:
-    throw "shouldnt happen";
+    return App.chooseQ(shape,type,{dp:1});
   case 5:
-    return App.chooseQ(shape,"rev-"+type);
+    return App.chooseQ(shape,"rev-"+type,{dp:1});
   case 6:
-    throw "shouldnt happen";
+    return App.chooseQ(shape,"rev-"+type);
   case 7:
     return App.chooseQ(shape,"pythag-"+type);
   case 8:
-    throw "shouldnt happen";
+    return App.chooseQ(shape,"pythag-"+type,{dp:1});
   case 9:
+  case 10:
     if (App.settings.simple_types.has("area")) {
       return App.chooseQ(shape,"iso-pythag-area");
     } else {
       return App.chooseQ(shape,"pythag-perimeter");
     }
-  case 10:
-    throw "shouldnt happen";
   default:
     throw "shouldnt happen";
   }
@@ -183,6 +184,8 @@ App.chooseQ = function (shape, type, options) {
     return new Triangle(100,type,options);
   case "parallelogram":
     return new Parallelogram(50,type,options);
+  case "trapezium":
+    return new Trapezium(50,type,options);
   default:
   case "rectangle":
     return new Rectangle(50,type,options);
@@ -210,6 +213,14 @@ App.makeView = function (question,rotation) {
     break;
   case "parallelogram":
     view = new ParallelogramView(
+      question,
+      App.settings.canvas_width,
+      App.settings.canvas_height,
+      rotation
+    );
+    break;
+  case "trapezium":
+    view = new TrapeziumView(
       question,
       App.settings.canvas_width,
       App.settings.canvas_height,
@@ -362,15 +373,17 @@ App.settings = {
   canvas_width: 300,
   canvas_height: 300,
   zoom: 1,
-  shapes: new Set(["triangle"]),
-  types: new Set(["perimeter","area","rev-area","rev-perimeter"]),
+  shapes: new Set(["trapezium"]),
+  //types: new Set(["perimeter","area","rev-area","rev-perimeter"]),
+  types: new Set(["area"]),
   simple_types: new Set(["perimeter","area"]),
   mindiff: 1,
   maxdiff: 5,
   n_questions: 8,
   options_mode: "basic",
   options: {
-    mix_units: true
+    mix_units: true,
+    dp: 1
   }
 };
 
@@ -378,7 +391,8 @@ App.settings.fromPage = function() {
   const formOptions = document.getElementsByClassName("option");
   for (let i = 0, n=formOptions.length; i<n; ++i) {
     const settingElem = formOptions[i];
-    const value = Number(settingElem.value) || settingElem.value;
+    const value = isNaN(settingElem.value) ? 
+      settingElem.value : Number(settingElem.value);
     let setting = settingElem.dataset.setting;
     //TODO: Make it work with radio buttons
     if (setting.endsWith("[]")) { //modify a set from checkboxes
@@ -393,8 +407,8 @@ App.settings.fromPage = function() {
       propByString(this,setting,value);
     }
   }
-//console.log("settings updated:");
-//console.log(this);
+console.log("settings updated:");
+console.log(this);
 };
 
 App.settings.toPage = function() {

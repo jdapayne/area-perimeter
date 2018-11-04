@@ -1,7 +1,7 @@
-import {randElem, roundDP} from "Utilities/Utilities";
+import {randElem, randBetween, roundDP, randPythagTriple, randPythagTripleWithLeg} from "Utilities/Utilities";
 import triangle_data from "./triangle_data.json";
 
-export default class Triangle {
+export default class Trapezium {
   /* Polymorphic constructor:
    * Triangle({b:Number,s1:Number,s2:Number,h:Number},options)
    *   Returns triangle with given sides
@@ -17,34 +17,49 @@ export default class Triangle {
       isosceles: false
     }
     const settings = Object.assign({},defaults,options);
+    const max_side = Number.isInteger(x) ? x : 500;
 
-    this.shape="triangle";
+    this.shape="trapezium";
     this.dp = settings.dp; // don't actually scale - just do this in display
 
-    let sides;
-    if ( x.b && x.s1 && x.s2 ) sides = x;
-    else {
-      const right_angle = type.startsWith("pythag-") || settings.right_angle;
-      const isosceles = type === "iso-pythag-area" || settings.isosceles;
-      const max_side = Number.isInteger(x) ? x : 500;
-      sides = randElem(triangle_data.filter(t => 
-        Math.max(t.b,t.s1,t.s2) <= max_side &&
-        ( !right_angle || (t.s1===t.h || t.s2===t.h) ) &&
-        ( !isosceles || t.s1 === t.s2)
-      ));
+    let a, b, s1, s2, h; // final sides and height
+    let b1, b2; // bits of longest parallel side. b=a+b1+b2
+    let tri1, tri2; // two ra triangles
+
+    tri1 = randPythagTriple(max_side);
+    s1 = tri1.c;
+
+    if (Math.random()<0.5) {
+      h = tri1.a;
+      b1 = tri1.b;
+    } else {
+      h = tri1.b;
+      b1 = tri1.a;
     }
 
-    this.b = {val: sides.b, show: true, missing: false};
-    this.h = {val: sides.h, show: true, missing: false};
-    this.s1 = {val: sides.s1, show: sides.s1 !== sides.h, missing: false};
-    this.s2 = {val: sides.s2, show: sides.s2 !== sides.h, missing: false};
+    tri2 = randPythagTripleWithLeg(h,max_side);
+    s2 = tri2.c;
+    b2 = tri2.b; //tri2.a =: h
+
+    a = randBetween(Math.floor(Math.min(s1,s2)*0.75),max_side-b1-b2);
+    b = b1 + b2 + a;
+
+    this.a = {val: a, show: true, missing: false}
+    this.b = {val: b, show: true, missing: false};
+    this.h = {val: h, show: true, missing: false};
+    this.s1 = {val: s1, show: true, missing: false};
+    this.s2 = {val: s2, show: true, missing: false};
+
+    this.b1 = b1;
+    this.b2 = b2; // never shown - useful for drawing
+
     this.area = {
-      val: this.b.val*this.h.val/2,
+      val: (a+b)*h/2,
       show: false,
       missing: true
     };
     this.perimeter = {
-      val: this.b.val+this.s1.val+this.s2.val,
+      val: a + b + s1 + s2,
       show: false,
       missing: true
     };
@@ -65,7 +80,8 @@ export default class Triangle {
       if (Math.random()<0.5) this.h.missing=true;
       else this.b.missing=true;
       break;
-    case "rev-perimeter":{
+    case "rev-perimeter":
+    default: {
       this.perimeter.show=true;
       this.perimeter.missing=false;
       let sides = [this.b,this.h];
@@ -74,36 +90,6 @@ export default class Triangle {
       randElem(sides).missing=true;
       break;
     }
-    case "pythag-area":
-      this.area.show=true;
-      this.area.missing=true;
-      randElem([this.b,this.h]).show=false;
-      break;
-    case "pythag-perimeter": {
-      this.perimeter.show=true;
-      this.perimeter.missing=true;
-      let sides = [this.b];
-      if (this.s1===this.h) {
-        sides.push(this.s2);
-        sides.push(this.h);
-      }
-      else if (this.s2===this.h) {
-        sides.push(this.s1);
-        sides.push(this.h);
-      } else {
-        sides.push(this.s1);
-        sides.push(this.s2);
-      }
-      randElem(sides).show=false;
-      break;
-    }
-    case "iso-pythag-area":
-    default:
-      this.area.show=true;
-      this.area.missing=true;
-      this.h.show=false;
-      this.includeHeight=false;
-      break;
     }
 
     //process options
@@ -119,7 +105,7 @@ export default class Triangle {
   }
 
   get maxSide () {
-    return Math.max(this.b,this.s1,this.s2);
+    return Math.max(this.a,this.b,this.s1,this.s2);
   }
 
   isRightAngled () {
