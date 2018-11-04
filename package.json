@@ -8,7 +8,7 @@
     "eslint": "^5.5.0",
     "webpack": "^4.17.2",
     "webpack-clear-console": "^1.0.3",
-    "webpack-command": "^0.4.1"
+    "webpack-command": "^0.4.2"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
